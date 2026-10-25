@@ -7,20 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0619E8536F44E1D6392359E5 /* SessionReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B3BC8CAE899C1A8E459AB75 /* SessionReviewView.swift */; };
 		1DC88D5EEB4CAB284EBDD58F /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5F766A54B4B6A5675849B0 /* SessionListView.swift */; };
 		2F662B2D599E4B143F61FBCE /* MotionRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6550AC6F9910F7C871F1F42 /* MotionRecorder.swift */; };
+		45D1C26EF4B438ACA87EE271 /* LabelingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC2291ECF2913A819DB013C6 /* LabelingTests.swift */; };
 		530AA52878B7629A52A79AA1 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC50FA0B07E5F94B96EBF01 /* RecordingView.swift */; };
+		5B1DB895EE881810837D9F8E /* LabelingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B64005A98D2521A0D2409C1D /* LabelingView.swift */; };
 		6521A7E33B9D5EAFECD09DDD /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F336E8BDE17D3A9894A42D /* Components.swift */; };
+		689BD9AA1E7383582A2A630E /* LabelSheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7621477A4BCE2D199BB97545 /* LabelSheets.swift */; };
 		6EE81C4639E066E390285BD0 /* SensorSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BBACE2CE67E9556EEB4BF4 /* SensorSample.swift */; };
 		726622567F81952CE940A466 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D9E12253269FBEB4BCA6E /* DeviceInfo.swift */; };
 		7F32D396203CE05C73629D7A /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC51DDB79B282DEE1D72434 /* SessionStore.swift */; };
+		9B98AA5F4F3B613E24C734B6 /* SessionExporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78CC3DD34156B73D2063593F /* SessionExporter.swift */; };
 		A2D672FB50BEA1799DE2351E /* SessionSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85B1B9280EDCDC1DE91D63 /* SessionSetupView.swift */; };
+		B1965027A0F75E8F2448ABDA /* AssistedLabeler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282ACC1608AD8C3CD74BAC77 /* AssistedLabeler.swift */; };
 		B7A9D65790E28C0B9A6FD523 /* SamplingStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2085762F0B1FCFA99FA368 /* SamplingStatistics.swift */; };
 		BD55C3D7B26862A337ED0819 /* RecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EDA74BBBB5AE0A2B9BB4C5 /* RecordingTests.swift */; };
+		C90EECCDF9D9F64ED60DD281 /* AnnotationValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0FCD8F4F32FB67E9998B5F3 /* AnnotationValidator.swift */; };
 		D77F0DF4CBE3093E2BDE8A62 /* PocketStepApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAE75F91F35E70C4BEB913 /* PocketStepApp.swift */; };
 		DDCCCFB3D258B9CB91F050A4 /* SensorCSVWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC7E3FF11864ADA6F07BAB /* SensorCSVWriter.swift */; };
 		DE2B6C40AAF234C08DDB50F5 /* StepLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C20C4F9C1E661EECC31D2F /* StepLabel.swift */; };
+		E0C6EB6693CC5338595227C7 /* StepCandidateDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2845D9A668C2985F74A43736 /* StepCandidateDetector.swift */; };
+		EFE2134AF9B4B83465649826 /* SensorDataReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D3704A4F1BCFA5815626CF /* SensorDataReader.swift */; };
 		F4D23D0B159292299D8C4367 /* SessionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150A812230C0E5F52DD79E91 /* SessionMetadata.swift */; };
+		F8D984EF2B92FF4DBAF048F3 /* LabelingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0095DE01B97B0E08F705EDF /* LabelingModel.swift */; };
 		FA3BE621C691D6845F7FF8D3 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7E694E91A07BC19ECA5D64 /* Router.swift */; };
 /* End PBXBuildFile section */
 
@@ -37,8 +47,11 @@
 /* Begin PBXFileReference section */
 		04F336E8BDE17D3A9894A42D /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		0A85B1B9280EDCDC1DE91D63 /* SessionSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSetupView.swift; sourceTree = "<group>"; };
+		0B3BC8CAE899C1A8E459AB75 /* SessionReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionReviewView.swift; sourceTree = "<group>"; };
 		13EDA74BBBB5AE0A2B9BB4C5 /* RecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingTests.swift; sourceTree = "<group>"; };
 		150A812230C0E5F52DD79E91 /* SessionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMetadata.swift; sourceTree = "<group>"; };
+		282ACC1608AD8C3CD74BAC77 /* AssistedLabeler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssistedLabeler.swift; sourceTree = "<group>"; };
+		2845D9A668C2985F74A43736 /* StepCandidateDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepCandidateDetector.swift; sourceTree = "<group>"; };
 		2AAAE75F91F35E70C4BEB913 /* PocketStepApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketStepApp.swift; sourceTree = "<group>"; };
 		2AF3277A020AA37DBF8C5260 /* PocketStepTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PocketStepTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3D9E12253269FBEB4BCA6E /* DeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
@@ -46,13 +59,20 @@
 		3FC51DDB79B282DEE1D72434 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
 		43C20C4F9C1E661EECC31D2F /* StepLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepLabel.swift; sourceTree = "<group>"; };
 		5F74F34C0FA61D6AA3F6DCE0 /* PocketStep.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PocketStep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7621477A4BCE2D199BB97545 /* LabelSheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelSheets.swift; sourceTree = "<group>"; };
+		78CC3DD34156B73D2063593F /* SessionExporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionExporter.swift; sourceTree = "<group>"; };
 		7CC50FA0B07E5F94B96EBF01 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
 		84EC7E3FF11864ADA6F07BAB /* SensorCSVWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorCSVWriter.swift; sourceTree = "<group>"; };
 		88BBACE2CE67E9556EEB4BF4 /* SensorSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSample.swift; sourceTree = "<group>"; };
 		8B2085762F0B1FCFA99FA368 /* SamplingStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingStatistics.swift; sourceTree = "<group>"; };
+		A0095DE01B97B0E08F705EDF /* LabelingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelingModel.swift; sourceTree = "<group>"; };
+		A0FCD8F4F32FB67E9998B5F3 /* AnnotationValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnnotationValidator.swift; sourceTree = "<group>"; };
+		A9D3704A4F1BCFA5815626CF /* SensorDataReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorDataReader.swift; sourceTree = "<group>"; };
+		B64005A98D2521A0D2409C1D /* LabelingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelingView.swift; sourceTree = "<group>"; };
 		CD7E694E91A07BC19ECA5D64 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		E6550AC6F9910F7C871F1F42 /* MotionRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionRecorder.swift; sourceTree = "<group>"; };
 		ED594DABFF6714FD69AB45E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FC2291ECF2913A819DB013C6 /* LabelingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelingTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -60,8 +80,11 @@
 			isa = PBXGroup;
 			children = (
 				04F336E8BDE17D3A9894A42D /* Components.swift */,
+				B64005A98D2521A0D2409C1D /* LabelingView.swift */,
+				7621477A4BCE2D199BB97545 /* LabelSheets.swift */,
 				7CC50FA0B07E5F94B96EBF01 /* RecordingView.swift */,
 				3D5F766A54B4B6A5675849B0 /* SessionListView.swift */,
+				0B3BC8CAE899C1A8E459AB75 /* SessionReviewView.swift */,
 				0A85B1B9280EDCDC1DE91D63 /* SessionSetupView.swift */,
 			);
 			path = Views;
@@ -110,6 +133,7 @@
 		BC0E08D5652853716AE1524E /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				FC2291ECF2913A819DB013C6 /* LabelingTests.swift */,
 				13EDA74BBBB5AE0A2B9BB4C5 /* RecordingTests.swift */,
 			);
 			path = Tests;
@@ -118,11 +142,17 @@
 		DC3CBF99D4ADCD7D3D840A6D /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				A0FCD8F4F32FB67E9998B5F3 /* AnnotationValidator.swift */,
+				282ACC1608AD8C3CD74BAC77 /* AssistedLabeler.swift */,
 				3B3D9E12253269FBEB4BCA6E /* DeviceInfo.swift */,
+				A0095DE01B97B0E08F705EDF /* LabelingModel.swift */,
 				E6550AC6F9910F7C871F1F42 /* MotionRecorder.swift */,
 				8B2085762F0B1FCFA99FA368 /* SamplingStatistics.swift */,
 				84EC7E3FF11864ADA6F07BAB /* SensorCSVWriter.swift */,
+				A9D3704A4F1BCFA5815626CF /* SensorDataReader.swift */,
+				78CC3DD34156B73D2063593F /* SessionExporter.swift */,
 				3FC51DDB79B282DEE1D72434 /* SessionStore.swift */,
+				2845D9A668C2985F74A43736 /* StepCandidateDetector.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -213,19 +243,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C90EECCDF9D9F64ED60DD281 /* AnnotationValidator.swift in Sources */,
+				B1965027A0F75E8F2448ABDA /* AssistedLabeler.swift in Sources */,
 				6521A7E33B9D5EAFECD09DDD /* Components.swift in Sources */,
 				726622567F81952CE940A466 /* DeviceInfo.swift in Sources */,
+				689BD9AA1E7383582A2A630E /* LabelSheets.swift in Sources */,
+				F8D984EF2B92FF4DBAF048F3 /* LabelingModel.swift in Sources */,
+				5B1DB895EE881810837D9F8E /* LabelingView.swift in Sources */,
 				2F662B2D599E4B143F61FBCE /* MotionRecorder.swift in Sources */,
 				D77F0DF4CBE3093E2BDE8A62 /* PocketStepApp.swift in Sources */,
 				530AA52878B7629A52A79AA1 /* RecordingView.swift in Sources */,
 				FA3BE621C691D6845F7FF8D3 /* Router.swift in Sources */,
 				B7A9D65790E28C0B9A6FD523 /* SamplingStatistics.swift in Sources */,
 				DDCCCFB3D258B9CB91F050A4 /* SensorCSVWriter.swift in Sources */,
+				EFE2134AF9B4B83465649826 /* SensorDataReader.swift in Sources */,
 				6EE81C4639E066E390285BD0 /* SensorSample.swift in Sources */,
+				9B98AA5F4F3B613E24C734B6 /* SessionExporter.swift in Sources */,
 				1DC88D5EEB4CAB284EBDD58F /* SessionListView.swift in Sources */,
 				F4D23D0B159292299D8C4367 /* SessionMetadata.swift in Sources */,
+				0619E8536F44E1D6392359E5 /* SessionReviewView.swift in Sources */,
 				A2D672FB50BEA1799DE2351E /* SessionSetupView.swift in Sources */,
 				7F32D396203CE05C73629D7A /* SessionStore.swift in Sources */,
+				E0C6EB6693CC5338595227C7 /* StepCandidateDetector.swift in Sources */,
 				DE2B6C40AAF234C08DDB50F5 /* StepLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -234,6 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45D1C26EF4B438ACA87EE271 /* LabelingTests.swift in Sources */,
 				BD55C3D7B26862A337ED0819 /* RecordingTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

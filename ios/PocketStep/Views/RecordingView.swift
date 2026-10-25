@@ -112,6 +112,14 @@ struct RecordingView: View {
                     confirmingStop = true
                 }
             case .finished, .failed:
+                if recorder.hasSavedData {
+                    LargeButton(title: "Label Steps", systemImage: "tag") {
+                        router.showLabeling(sessionId: recorder.metadata.sessionId)
+                    }
+                    LargeButton(title: "Review Session", systemImage: "list.bullet.clipboard", prominent: false) {
+                        router.showReview(sessionId: recorder.metadata.sessionId)
+                    }
+                }
                 LargeButton(title: "Done", systemImage: "checkmark", prominent: !recorder.hasSavedData) {
                     router.popToRoot()
                 }
@@ -164,7 +172,7 @@ struct RecordingView: View {
         case .paused:
             return "No samples are recorded while paused. The pause is saved in the session metadata."
         case .finished:
-            return "The session was saved on this phone. Label its steps from the session list."
+            return "The session was saved on this phone. Label its steps next, or later from the session list."
         case .failed(let message):
             return message
         }

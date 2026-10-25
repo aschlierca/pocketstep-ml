@@ -14,10 +14,12 @@ struct SessionListView: View {
                     description: Text("Create a session to record labeled walking-in-place data."))
             }
             ForEach(store.sessions) { session in
-                SessionRow(session: session)
-                    .swipeActions {
-                        Button("Delete", role: .destructive) { pendingDeletion = session }
-                    }
+                NavigationLink(value: Route.review(session.sessionId)) {
+                    SessionRow(session: session)
+                }
+                .swipeActions {
+                    Button("Delete", role: .destructive) { pendingDeletion = session }
+                }
             }
             if let error = store.lastError {
                 WarningBanner(text: error)

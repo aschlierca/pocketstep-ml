@@ -25,6 +25,10 @@ struct PocketStepApp: App {
             SessionSetupView()
         case .record(let request):
             RecordingView(request: request, store: store)
+        case .review(let sessionId):
+            SessionReviewView(sessionId: sessionId)
+        case .label(let sessionId):
+            LabelingView(sessionId: sessionId, store: store)
         }
     }
 }
