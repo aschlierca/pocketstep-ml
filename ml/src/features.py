@@ -44,6 +44,8 @@ WINDOW_FEATURES = (
     "vertical_std",
     "horizontal_max",
     "horizontal_mean",
+    "horizontal_mean_before",
+    "horizontal_mean_after",
 )
 CONTEXT_LIVE_FEATURES = ("time_since_previous_step", "pocket_side_is_left")
 FUTURE_FEATURES = ("time_until_next_step",)
@@ -100,6 +102,10 @@ def window_features(window: pd.DataFrame, center: float, config: FeatureConfig) 
     out["vertical_std"] = float(vertical.std())
     out["horizontal_max"] = float(horizontal.max())
     out["horizontal_mean"] = float(horizontal.mean())
+    # Movement before vs after the footfall, e.g. the swing of the pocket-side leg before it lands.
+    before = t < center
+    out["horizontal_mean_before"] = float(horizontal[before].mean()) if before.any() else 0.0
+    out["horizontal_mean_after"] = float(horizontal[~before].mean()) if (~before).any() else 0.0
     return out
 
 
