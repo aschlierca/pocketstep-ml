@@ -38,7 +38,3 @@ METADATA_REQUIRED = (
     "session_end",
     "notes",
 )
-
-# Binary target encoding used by every model.
-LABEL_TO_INT = {"left": 0, "right": 1}
-INT_TO_LABEL = {v: k for k, v in LABEL_TO_INT.items()}

@@ -56,6 +56,12 @@ class FeatureConfig:
 @dataclass
 class ModelConfig:
     model_type: str = "random_forest"
+    # "pocket_relative": learn whether a step is by the leg carrying the phone, then convert to
+    # left/right with the session's known pocket side (exact, since pocket side is recorded up front).
+    # Without this, "left" means the phone's own leg in left-pocket sessions but the other leg in
+    # right-pocket sessions, an XOR that greedy tree learners cannot pick up.
+    # "absolute": learn left/right directly.
+    target: str = "pocket_relative"
     n_estimators: int = 300
     max_depth: Optional[int] = None
     min_samples_leaf: int = 2
