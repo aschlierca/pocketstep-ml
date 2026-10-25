@@ -1,0 +1,476 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1DC88D5EEB4CAB284EBDD58F /* SessionListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5F766A54B4B6A5675849B0 /* SessionListView.swift */; };
+		2F662B2D599E4B143F61FBCE /* MotionRecorder.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6550AC6F9910F7C871F1F42 /* MotionRecorder.swift */; };
+		530AA52878B7629A52A79AA1 /* RecordingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CC50FA0B07E5F94B96EBF01 /* RecordingView.swift */; };
+		6521A7E33B9D5EAFECD09DDD /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04F336E8BDE17D3A9894A42D /* Components.swift */; };
+		6EE81C4639E066E390285BD0 /* SensorSample.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88BBACE2CE67E9556EEB4BF4 /* SensorSample.swift */; };
+		726622567F81952CE940A466 /* DeviceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B3D9E12253269FBEB4BCA6E /* DeviceInfo.swift */; };
+		7F32D396203CE05C73629D7A /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC51DDB79B282DEE1D72434 /* SessionStore.swift */; };
+		A2D672FB50BEA1799DE2351E /* SessionSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A85B1B9280EDCDC1DE91D63 /* SessionSetupView.swift */; };
+		B7A9D65790E28C0B9A6FD523 /* SamplingStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2085762F0B1FCFA99FA368 /* SamplingStatistics.swift */; };
+		BD55C3D7B26862A337ED0819 /* RecordingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13EDA74BBBB5AE0A2B9BB4C5 /* RecordingTests.swift */; };
+		D77F0DF4CBE3093E2BDE8A62 /* PocketStepApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AAAE75F91F35E70C4BEB913 /* PocketStepApp.swift */; };
+		DDCCCFB3D258B9CB91F050A4 /* SensorCSVWriter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EC7E3FF11864ADA6F07BAB /* SensorCSVWriter.swift */; };
+		DE2B6C40AAF234C08DDB50F5 /* StepLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43C20C4F9C1E661EECC31D2F /* StepLabel.swift */; };
+		F4D23D0B159292299D8C4367 /* SessionMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 150A812230C0E5F52DD79E91 /* SessionMetadata.swift */; };
+		FA3BE621C691D6845F7FF8D3 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7E694E91A07BC19ECA5D64 /* Router.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		CB09FFB8DCC723E84F68DC5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 387CFE3D6170937575601888 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9EC20C63F6749D9BA96A6780;
+			remoteInfo = PocketStep;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		04F336E8BDE17D3A9894A42D /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		0A85B1B9280EDCDC1DE91D63 /* SessionSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionSetupView.swift; sourceTree = "<group>"; };
+		13EDA74BBBB5AE0A2B9BB4C5 /* RecordingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingTests.swift; sourceTree = "<group>"; };
+		150A812230C0E5F52DD79E91 /* SessionMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionMetadata.swift; sourceTree = "<group>"; };
+		2AAAE75F91F35E70C4BEB913 /* PocketStepApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketStepApp.swift; sourceTree = "<group>"; };
+		2AF3277A020AA37DBF8C5260 /* PocketStepTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PocketStepTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B3D9E12253269FBEB4BCA6E /* DeviceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfo.swift; sourceTree = "<group>"; };
+		3D5F766A54B4B6A5675849B0 /* SessionListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionListView.swift; sourceTree = "<group>"; };
+		3FC51DDB79B282DEE1D72434 /* SessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionStore.swift; sourceTree = "<group>"; };
+		43C20C4F9C1E661EECC31D2F /* StepLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepLabel.swift; sourceTree = "<group>"; };
+		5F74F34C0FA61D6AA3F6DCE0 /* PocketStep.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PocketStep.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7CC50FA0B07E5F94B96EBF01 /* RecordingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingView.swift; sourceTree = "<group>"; };
+		84EC7E3FF11864ADA6F07BAB /* SensorCSVWriter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorCSVWriter.swift; sourceTree = "<group>"; };
+		88BBACE2CE67E9556EEB4BF4 /* SensorSample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensorSample.swift; sourceTree = "<group>"; };
+		8B2085762F0B1FCFA99FA368 /* SamplingStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SamplingStatistics.swift; sourceTree = "<group>"; };
+		CD7E694E91A07BC19ECA5D64 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		E6550AC6F9910F7C871F1F42 /* MotionRecorder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionRecorder.swift; sourceTree = "<group>"; };
+		ED594DABFF6714FD69AB45E7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		074821DA056D6E48879D065D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				04F336E8BDE17D3A9894A42D /* Components.swift */,
+				7CC50FA0B07E5F94B96EBF01 /* RecordingView.swift */,
+				3D5F766A54B4B6A5675849B0 /* SessionListView.swift */,
+				0A85B1B9280EDCDC1DE91D63 /* SessionSetupView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		250B86021C18957ED40DB50B = {
+			isa = PBXGroup;
+			children = (
+				81EDBECC488DCAAFFCD6C97F /* PocketStep */,
+				FECB11C8A2D3C6236A3FCBC4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6ECD0DB7974B297F5CE6CF8C /* App */ = {
+			isa = PBXGroup;
+			children = (
+				ED594DABFF6714FD69AB45E7 /* Info.plist */,
+				2AAAE75F91F35E70C4BEB913 /* PocketStepApp.swift */,
+				CD7E694E91A07BC19ECA5D64 /* Router.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		81EDBECC488DCAAFFCD6C97F /* PocketStep */ = {
+			isa = PBXGroup;
+			children = (
+				6ECD0DB7974B297F5CE6CF8C /* App */,
+				9F39F321CB27AB0753CF6BC1 /* Models */,
+				DC3CBF99D4ADCD7D3D840A6D /* Services */,
+				BC0E08D5652853716AE1524E /* Tests */,
+				074821DA056D6E48879D065D /* Views */,
+			);
+			path = PocketStep;
+			sourceTree = "<group>";
+		};
+		9F39F321CB27AB0753CF6BC1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				88BBACE2CE67E9556EEB4BF4 /* SensorSample.swift */,
+				150A812230C0E5F52DD79E91 /* SessionMetadata.swift */,
+				43C20C4F9C1E661EECC31D2F /* StepLabel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BC0E08D5652853716AE1524E /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				13EDA74BBBB5AE0A2B9BB4C5 /* RecordingTests.swift */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		DC3CBF99D4ADCD7D3D840A6D /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				3B3D9E12253269FBEB4BCA6E /* DeviceInfo.swift */,
+				E6550AC6F9910F7C871F1F42 /* MotionRecorder.swift */,
+				8B2085762F0B1FCFA99FA368 /* SamplingStatistics.swift */,
+				84EC7E3FF11864ADA6F07BAB /* SensorCSVWriter.swift */,
+				3FC51DDB79B282DEE1D72434 /* SessionStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		FECB11C8A2D3C6236A3FCBC4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5F74F34C0FA61D6AA3F6DCE0 /* PocketStep.app */,
+				2AF3277A020AA37DBF8C5260 /* PocketStepTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9EC20C63F6749D9BA96A6780 /* PocketStep */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A24FDD0D8CCA348250F719A0 /* Build configuration list for PBXNativeTarget "PocketStep" */;
+			buildPhases = (
+				F75B7687EC344C8D7E2B19FA /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PocketStep;
+			packageProductDependencies = (
+			);
+			productName = PocketStep;
+			productReference = 5F74F34C0FA61D6AA3F6DCE0 /* PocketStep.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E43893DC024D27C0BBB0C471 /* PocketStepTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F12FFDC17D4BF85B6DE5E0D6 /* Build configuration list for PBXNativeTarget "PocketStepTests" */;
+			buildPhases = (
+				FD7071B2D5B2D359A3240053 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				4D161298E645F4ECC754FC34 /* PBXTargetDependency */,
+			);
+			name = PocketStepTests;
+			packageProductDependencies = (
+			);
+			productName = PocketStepTests;
+			productReference = 2AF3277A020AA37DBF8C5260 /* PocketStepTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		387CFE3D6170937575601888 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					9EC20C63F6749D9BA96A6780 = {
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FA8D72C0BD299D120F4F2954 /* Build configuration list for PBXProject "PocketStep" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 250B86021C18957ED40DB50B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FECB11C8A2D3C6236A3FCBC4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9EC20C63F6749D9BA96A6780 /* PocketStep */,
+				E43893DC024D27C0BBB0C471 /* PocketStepTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F75B7687EC344C8D7E2B19FA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6521A7E33B9D5EAFECD09DDD /* Components.swift in Sources */,
+				726622567F81952CE940A466 /* DeviceInfo.swift in Sources */,
+				2F662B2D599E4B143F61FBCE /* MotionRecorder.swift in Sources */,
+				D77F0DF4CBE3093E2BDE8A62 /* PocketStepApp.swift in Sources */,
+				530AA52878B7629A52A79AA1 /* RecordingView.swift in Sources */,
+				FA3BE621C691D6845F7FF8D3 /* Router.swift in Sources */,
+				B7A9D65790E28C0B9A6FD523 /* SamplingStatistics.swift in Sources */,
+				DDCCCFB3D258B9CB91F050A4 /* SensorCSVWriter.swift in Sources */,
+				6EE81C4639E066E390285BD0 /* SensorSample.swift in Sources */,
+				1DC88D5EEB4CAB284EBDD58F /* SessionListView.swift in Sources */,
+				F4D23D0B159292299D8C4367 /* SessionMetadata.swift in Sources */,
+				A2D672FB50BEA1799DE2351E /* SessionSetupView.swift in Sources */,
+				7F32D396203CE05C73629D7A /* SessionStore.swift in Sources */,
+				DE2B6C40AAF234C08DDB50F5 /* StepLabel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FD7071B2D5B2D359A3240053 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD55C3D7B26862A337ED0819 /* RecordingTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		4D161298E645F4ECC754FC34 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9EC20C63F6749D9BA96A6780 /* PocketStep */;
+			targetProxy = CB09FFB8DCC723E84F68DC5F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0C950A403E1DD8AB76643800 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pocketstep.PocketStepTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketStep.app/PocketStep";
+			};
+			name = Release;
+		};
+		81AC36D42D4E1A5D0BD848E9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = PocketStep/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pocketstep.PocketStep;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		8A456B14271989D580EE0601 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = PocketStep/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pocketstep.PocketStep;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		BB4F0F02B43BA709F293627F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		C4298678E347FAC31918B555 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.pocketstep.PocketStepTests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PocketStep.app/PocketStep";
+			};
+			name = Debug;
+		};
+		D71840AB86AA37F119CED51A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A24FDD0D8CCA348250F719A0 /* Build configuration list for PBXNativeTarget "PocketStep" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8A456B14271989D580EE0601 /* Debug */,
+				81AC36D42D4E1A5D0BD848E9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F12FFDC17D4BF85B6DE5E0D6 /* Build configuration list for PBXNativeTarget "PocketStepTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C4298678E347FAC31918B555 /* Debug */,
+				0C950A403E1DD8AB76643800 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FA8D72C0BD299D120F4F2954 /* Build configuration list for PBXProject "PocketStep" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BB4F0F02B43BA709F293627F /* Debug */,
+				D71840AB86AA37F119CED51A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 387CFE3D6170937575601888 /* Project object */;
+}
