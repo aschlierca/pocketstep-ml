@@ -1,0 +1,35 @@
+# Private planning documents
+doc/spec/PRD.md
+
+# Participant data and recordings: never commit
+ml/data/raw/*
+!ml/data/raw/.gitkeep
+ml/data/processed/*
+!ml/data/processed/.gitkeep
+*.zip
+*.mov
+*.mp4
+
+# Generated pipeline artifacts
+ml/models/*
+!ml/models/.gitkeep
+ml/reports/*
+!ml/reports/.gitkeep
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Xcode
+ios/**/xcuserdata/
+ios/**/*.xcuserstate
+ios/build/
+DerivedData/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
