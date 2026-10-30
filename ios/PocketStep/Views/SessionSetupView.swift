@@ -38,7 +38,7 @@ struct SessionSetupView: View {
             } header: {
                 Text("Identifiers")
             } footer: {
-                Text("Use an anonymous code. Never enter a participant's name or other identifying details.")
+                Text("Use an anonymous code. Never enter a participant's name or other identifying details. Sessions shared to the project are published publicly.")
             }
 
             Section("Device") {
@@ -73,14 +73,18 @@ struct SessionSetupView: View {
                 Text("100 Hz is the default. iPhones may deliver fewer samples than requested; the measured rate is saved with the session.")
             }
 
-            Section("Notes") {
+            Section {
                 TextField("Optional, e.g. trouser type, phone orientation", text: $notes, axis: .vertical)
                     .lineLimit(3...6)
+            } header: {
+                Text("Notes")
+            } footer: {
+                Text("Notes are published with the data. Do not include personal information.")
             }
 
             Section("Before You Record") {
                 VStack(alignment: .leading, spacing: 8) {
-                    instruction(1, "Confirm the participant has given consent under your approved protocol.")
+                    instruction(1, "Confirm the participant has consented under your approved protocol, including public release of their anonymized motion data.")
                     instruction(2, "Put the phone in the \(pocketSide.displayName.lowercased()) front trouser pocket, screen facing the leg, top of the phone pointing down. Note any other orientation in Notes.")
                     instruction(3, "The pocket must hold the phone snugly. Keep the same position for the whole session.")
                     instruction(4, "Press Start, then pocket the phone during the countdown. The screen turns off in the pocket.")
