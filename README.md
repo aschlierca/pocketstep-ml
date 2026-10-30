@@ -14,13 +14,52 @@ It has two independent parts that communicate only through exported CSV files:
 This is not a fitness app. The priorities are data quality, trustworthy labels, reproducibility
 and honest evaluation.
 
-> **Status.** The Python pipeline is tested end to end on synthetic data. The iOS app builds and
+> **Status.** The Python pipeline is tested end to end on synthetic data, and newly published
+> sessions retrain the model automatically through GitHub Actions. The iOS app builds and
 > its logic tests pass in the iOS Simulator, but recording has not yet been verified on a
 > physical iPhone (the Simulator has no motion sensors). **No real-world accuracy has been
 > measured.** The macro-F1 ≥ 0.85 figure below is a development target, not a result.
 
+## Researcher quick start
+
+Collect data with your own iPhone and add it to the shared dataset in a few steps. The model then
+retrains automatically.
+
+**Once, after cloning** (you need write access to this repository):
+
+```bash
+git clone https://github.com/aschlierca/pocketstep-ml.git
+cd pocketstep-ml
+ios/setup_signing.sh                      # finds your Apple team; see "iOS app" if it can't
+python3 -m venv .venv && source .venv/bin/activate
+python -m pip install -r ml/requirements.txt
+```
+
+Open `ios/PocketStep.xcodeproj`, select your iPhone and press **Run** (see
+[Running on an iPhone](#running-on-an-iphone) for first-run prompts).
+
+**For every session:**
+
+1. Record and label it in the app ([protocol](docs/data_collection_protocol.md)).
+2. In **Session Review**, tap **Export ZIP** and AirDrop it to your Mac (it lands in `~/Downloads`).
+3. From the repository folder, run:
+
+   ```bash
+   source .venv/bin/activate
+   python -m ml.src.ingest
+   ```
+
+   This validates every new `S-*.zip` in `~/Downloads`, shows what will be published, asks you
+   to confirm consent for public release, and then commits and pushes the session.
+4. GitHub Actions retrains the model on all published sessions and commits the result to
+   [`ml/published/`](ml/published/README.md) within a few minutes. There is nothing else to run.
+
+To fix labels later, correct them in the app, export again and re-run `python -m ml.src.ingest`.
+It replaces the labels and keeps the recording.
+
 ## Contents
 
+- [Researcher quick start](#researcher-quick-start)
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
 - [iOS app](#ios-app): Xcode setup, testing on an iPhone, permissions
@@ -47,12 +86,19 @@ iPhone (PocketStep app)                              Computer (Python, ml/)
 │ Step labeling (manual / assisted)  │  sensor_data │ train: grouped split, Random Forest         │
 │ Review & export                    │  step_labels │ evaluate: held-out metrics + reports        │
 │ Data stays on device until export  │  metadata    │ predict: detect steps, left/right/unknown   │
-└────────────────────────────────────┘              └─────────────────────────────────────────────┘
+└────────────────────────────────────┘              └──────────────────────┬──────────────────────┘
+                                                      python -m ml.src.ingest │ validate, commit, push
+                                                                              ▼
+                                       GitHub: ml/data/raw/ ──▶ Actions: retrain ──▶ ml/published/
 ```
 
 ```
+.github/workflows/
+  retrain.yml                retrains the published model when data or pipeline code changes
 ios/
   project.yml                XcodeGen spec (the generated PocketStep.xcodeproj is committed)
+  setup_signing.sh           writes Config/Signing.xcconfig for your Apple team (git-ignored)
+  Config/                    build settings shared by everyone
   PocketStep/
     App/                     entry point, navigation, Info.plist
     Models/                  session metadata, samples, step labels + CSV codec
@@ -62,12 +108,13 @@ ios/
     Tests/                   XCTest unit tests
 ml/
   src/                       schema, config, preprocessing, segmentation, features,
-                             models, train, evaluate, predict, synthetic
+                             models, train, evaluate, predict, synthetic, ingest, retrain
   tests/                     pytest suite
-  data/raw/                  put exported sessions here (git-ignored)
+  data/raw/                  the published dataset, one folder per session (added by ingest)
   data/processed/            generated feature tables (git-ignored)
   data/synthetic/            8 synthetic sample sessions (committed, flagged synthetic)
-  models/, reports/          generated outputs (git-ignored)
+  published/                 model + reports trained on data/raw by GitHub Actions
+  models/, reports/          your local outputs (git-ignored)
   requirements.txt
 docs/                        data format, protocol, pipeline design
 ```
@@ -84,10 +131,14 @@ docs/                        data format, protocol, pipeline design
 
 ### Xcode setup
 
-1. Open `ios/PocketStep.xcodeproj` in Xcode.
-2. Select the **PocketStep** target → **Signing & Capabilities** → choose your **Team**. If the
-   bundle identifier `org.pocketstep.PocketStep` is already taken for your team, change it to
-   something unique, such as `org.yourlab.PocketStep`.
+1. Run `ios/setup_signing.sh` once. It reads your team ID from your Apple Development certificate
+   and writes `ios/Config/Signing.xcconfig`, which is git-ignored. The bundle identifier becomes
+   `org.pocketstep.PocketStep.<TEAM_ID>`, so it never clashes with other researchers'.
+   - If it finds no certificate: in Xcode open **Settings → Accounts**, add your Apple ID
+     (a free one works), then **Manage Certificates… → + → Apple Development**, and run it again.
+   - With several teams it asks which to use, or you can pass one: `ios/setup_signing.sh ABCDE12345`.
+2. Open `ios/PocketStep.xcodeproj` in Xcode. **Do not change the team in the Signing tab**: that
+   edits the shared project file. The script's settings are already applied.
 3. If you add or remove source files, regenerate the project: `cd ios && xcodegen generate`.
 
 ### Running on an iPhone
@@ -139,12 +190,11 @@ sync, is in [docs/data_collection_protocol.md](docs/data_collection_protocol.md)
    candidate steps and let **assisted labeling** propose alternating feet. Proposals are marked
    *Needs review* until a person confirms or corrects each one. Mark unclear steps *Unknown* and
    unusable ones *Invalid*.
-4. **Review & export**: check the counts and warnings, then tap **Export ZIP** and transfer the file.
-5. Unzip into `ml/data/raw/`:
-
-   ```bash
-   unzip S-20261025-101500-3FA2.zip -d ml/data/raw/
-   ```
+4. **Review & export**: check the counts and warnings, then tap **Export ZIP** and AirDrop it to
+   your Mac.
+5. **Publish**: run `python -m ml.src.ingest` from the repository. It validates the session and
+   pushes it to `ml/data/raw/`, and the model retrains automatically
+   (see [Researcher quick start](#researcher-quick-start)).
 
 ## Data format
 
@@ -188,6 +238,8 @@ enlarge the sample set with `python -m ml.src.synthetic --output-dir ml/data/syn
 
 | Step | Command |
 |---|---|
+| Publish exported sessions (validate, commit, push) | `python -m ml.src.ingest [ZIPs or folders]` |
+| Retrain the published model locally (normally done by GitHub Actions) | `python -m ml.src.retrain` |
 | Validate recordings | `python -m ml.src.preprocessing --data-dir ml/data/raw` |
 | Export the per-step feature table (optional) | `python -m ml.src.features --data-dir ml/data/raw --output ml/data/processed/step_features.csv` |
 | Train | `python -m ml.src.train --data-dir ml/data/raw` |
@@ -197,6 +249,9 @@ enlarge the sample set with `python -m ml.src.synthetic --output-dir ml/data/syn
 
 Useful options:
 
+- `ingest`: with no arguments it takes every `S-*.zip` in `~/Downloads`. `--dry-run` validates
+  only, `--no-push` commits without pushing, `--yes` skips the confirmation (only when consent is
+  already confirmed).
 - `train`: `--group-by participant|session` (default participant), `--seed`, `--test-fraction`,
   `--min-groups`, `--feature-set live|offline`, `--target pocket_relative|absolute`,
   `--n-estimators`, `--max-depth`, `--min-samples-leaf`, `--confidence-threshold`,
@@ -213,6 +268,13 @@ sensor file, or takes `--pocket-side left|right`.
 
 ### Expected outputs
 
+- **Ingest**: one line per session (`NEW`, `UPDATED LABELS`, `skipped` or `REJECTED` with the
+  reason), label counts, warnings and the notes that will become public; then a consent prompt,
+  a commit and a push. A different recording that reuses an existing session ID is refused.
+- **Published model** (`ml/published/`, written by GitHub Actions): `pocketstep.joblib`,
+  `reports/metrics.json`, `reports/confusion_matrix.png`, `reports/test_predictions.csv` and
+  `README.md` with the dataset summary, split, held-out metrics and limitations. Until at least
+  3 participants have usable data, the README explains why no model was trained.
 - **Validate**: one block per session, `OK` or `REJECTED`, with errors and warnings (gaps, duplicate
   or out-of-order timestamps, units, sampling rate, label problems) and basic stats. Exit code 1
   if any session is rejected.
@@ -245,6 +307,8 @@ See [docs/ml_pipeline.md](docs/ml_pipeline.md) for the reasoning, including why 
 
 ## Known limitations
 
+- **Automatic retraining needs data from at least 3 participants** before it publishes a model,
+  because it refuses to split one person's steps between training and test.
 - **Not validated on real recordings yet.** Recording on a physical iPhone, the end-to-end export,
   and model performance on real people are all unverified.
 - **Small-sample evaluation.** With a handful of participants, held-out metrics have wide
@@ -283,14 +347,29 @@ See [docs/ml_pipeline.md](docs/ml_pipeline.md) for the reasoning, including why 
 | Many steps excluded as `unreviewed_label` | Review assisted proposals in the app (or use `--include-unreviewed` for exploration only). |
 | Many `window_out_of_range` / `window_overlaps_gap` | Steps too close to the start/end or to a pause. Stand still for 2 s at the start and end, and avoid pausing mid-walk. |
 | `ModuleNotFoundError: No module named 'ml'` | Run commands from the repository root. |
+| `ios/setup_signing.sh` finds no certificate | Add your Apple ID in Xcode → Settings → Accounts and create an Apple Development certificate (Manage Certificates… → +), then rerun. |
+| Xcode shows a modified `project.pbxproj` | You changed signing in the Signing tab. Discard it (`git checkout ios/PocketStep.xcodeproj`) and use `ios/setup_signing.sh`. |
+| Ingest: `No session ZIPs found` | AirDrop the export to this Mac (it lands in `~/Downloads`) or pass the ZIP path. |
+| Ingest: `git push failed` / permission denied | Ask the repository owner to add you as a collaborator, or run with `--no-push` and open a pull request. |
+| Ingest: `a different recording with session ID ... is already published` | Each recording keeps its own session ID. Don't rename exports; record a new session instead. |
+| `ml/published/README.md` did not update | Check the **Actions** tab. If the commit step fails with a permission error, set **Settings → Actions → General → Workflow permissions** to *Read and write*. |
 
 ## Privacy and research ethics
 
-- Participants are identified only by anonymous codes. No names, accounts, location, contacts,
-  audio or video are collected by the app.
-- Data stays on the phone until the researcher exports it. Nothing is uploaded automatically.
-- Raw recordings, labels, exports, videos, processed data, models and reports are excluded from Git
-  (see `.gitignore`). Only synthetic sample data is committed.
+**The dataset is public.** Every session published with `python -m ml.src.ingest` goes into
+`ml/data/raw/` in this public repository: accelerometer samples, step labels and metadata, which
+includes the anonymous participant ID, phone model, iOS version, recording date and time, and the
+notes field. Anyone can download it, and removing it later does not remove it from clones,
+forks or Git history.
+
+- Only publish sessions from participants who **consented to public release** of their
+  anonymized motion data. `ingest` asks for this confirmation every time unless you pass `--yes`.
+- Participants are identified only by anonymous codes; `ingest` rejects IDs that are not of that
+  form. Keep any table linking codes to people private, never in this repository.
+- Never put names or identifying details in notes; `ingest` shows the notes before publishing.
+- The app collects no names, accounts, location, contacts, audio or video, and uploads nothing
+  itself. Data leaves the phone only when a researcher exports it.
+- Exported ZIPs, videos and local pipeline outputs stay git-ignored.
 - Research with human participants may require institutional (IRB or ethics committee) approval and
-  an approved informed-consent procedure. Obtain both before collecting data from anyone other than
-  yourself.
+  an approved informed-consent procedure that covers public data sharing. Obtain both before
+  collecting data from anyone other than yourself.

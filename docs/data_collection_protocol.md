@@ -9,8 +9,11 @@ fairly if every session follows the same procedure.
 - **Ethics approval.** Recording people for research usually requires approval from an
   institutional review board or ethics committee, and a consent procedure they have approved. Get
   both before recording anyone other than yourself.
-- **Consent.** Use your approved consent form. Explain what is recorded (phone motion only; no
-  location, audio, camera or contacts), where it is stored, and how a participant can withdraw.
+- **Consent, including public release.** Published sessions go into a public GitHub repository,
+  where anyone can download them. Use an approved consent form that covers this. Explain what is
+  recorded (phone motion only; no location, audio, camera or contacts), that the anonymized
+  recording, labels and session details (including the recording date and time) will be public,
+  and that published data cannot be fully withdrawn once others have copied it.
 - **Anonymous IDs.** Give each participant a code such as `P-7QK2MX` (the app's
   *Generate Anonymous ID* button). Keep any table linking codes to people separate from the data,
   under your institution's rules. Never type names into the app's ID or notes fields.
@@ -126,15 +129,33 @@ target, the same foot twice in a row, steps closer than 200 ms, steps outside th
 inside pauses, a first step that does not match the starting foot, sensor gaps, and sampling-rate
 drift. Warnings never block export, but resolve them where you can.
 
-Tap **Export ZIP** and send the file to your computer with AirDrop, Save to Files, or another
-channel your data-handling plan allows. Session folders are also visible in the Files app under
-*On My iPhone → PocketStep → Sessions*. Nothing is uploaded automatically.
+Tap **Export ZIP** and send the file to your Mac with AirDrop (it lands in `~/Downloads`) or Save
+to Files. Session folders are also visible in the Files app under
+*On My iPhone → PocketStep → Sessions*. The app itself uploads nothing.
 
-On the computer:
+### Publish
+
+From the repository folder on the Mac:
 
 ```bash
-unzip S-20261025-101500-3FA2.zip -d ml/data/raw/
+source .venv/bin/activate
+python -m ml.src.ingest            # every S-*.zip in ~/Downloads, or pass ZIP paths
 ```
+
+For each session, `ingest`:
+
+1. validates it with the same checks as the training pipeline, and rejects failed sessions,
+   synthetic data, and participant IDs that are not anonymous codes;
+2. shows the label counts, warnings, unreviewed labels and any notes that will become public;
+3. asks you to confirm that the participant consented to public release;
+4. copies it to `ml/data/raw/<session_id>/`, commits and pushes.
+
+GitHub Actions then retrains the model on all published sessions and updates
+`ml/published/README.md`.
+
+Re-exporting a session after fixing labels and running `ingest` again replaces its labels. The
+recording itself can never be overwritten. Unreviewed labels are published but not used for
+training until they are reviewed and re-exported.
 
 ## Optional video for ground truth
 

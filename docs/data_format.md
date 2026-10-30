@@ -9,8 +9,9 @@ Each recording session is exported from the iPhone as `<session_id>.zip`, which 
 └── session_metadata.json
 ```
 
-Unzip it into `ml/data/raw/` (or any folder you pass as `--data-dir`). The Python pipeline searches the
-data directory recursively for folders that contain a `sensor_data.csv`.
+`python -m ml.src.ingest` validates the ZIP and publishes it as `ml/data/raw/<session_id>/`. The
+Python pipeline searches the data directory recursively for folders that contain a
+`sensor_data.csv`, so an unzipped folder anywhere under `--data-dir` also works for local analysis.
 
 Raw sensor samples and step annotations live in separate files, so labels can be corrected or
 replaced without touching the recording.
@@ -119,7 +120,8 @@ error. Other missing keys from the required list produce warnings.
 | File | Written by | Contents |
 |---|---|---|
 | `ml/data/processed/step_features.csv` | `ml.src.features` | One row per annotated step: identifiers, label info, window status, exclusion reason, all features. |
-| `ml/models/*.joblib` | `ml.src.train` | Model, feature names, config, class mapping, split and data fingerprints. |
+| `ml/models/*.joblib` | `ml.src.train` | Model, feature names, config, class mapping, split and data fingerprints (local, git-ignored). |
+| `ml/published/` | `ml.src.retrain` (GitHub Actions) | `pocketstep.joblib`, `reports/` and a `README.md` status page for the model trained on `ml/data/raw/`. Committed. |
 | `ml/reports/metrics.json` | `ml.src.evaluate` | Held-out metrics and limitations. |
 | `ml/reports/confusion_matrix.png` | `ml.src.evaluate` | Confusion matrices without and with abstention. |
 | `ml/reports/test_predictions.csv` | `ml.src.evaluate` | Per-step held-out predictions for error analysis. |

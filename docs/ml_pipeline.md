@@ -28,6 +28,8 @@ ml/data/raw/<session>/                 validate        preprocess          segme
 | `evaluate.py` | Held-out metrics, plots, limitations. |
 | `predict.py` | Detection + classification of a new recording; optional separate scoring. |
 | `synthetic.py` | Synthetic sessions for tests and demos only. |
+| `ingest.py` | Validates exported sessions and publishes them to `ml/data/raw/` with git. |
+| `retrain.py` | Trains and evaluates on `ml/data/raw/` and writes `ml/published/`; run by CI. |
 
 ## Validation
 
@@ -171,6 +173,20 @@ Detection errors and left/right errors are different failures, so they are measu
 
 Context features at inference use previously **detected** steps, while training uses annotated
 ones. Missed or extra detections therefore also affect `time_since_previous_step`.
+
+## Continuous retraining
+
+`.github/workflows/retrain.yml` runs on every push to `main` that changes `ml/data/raw/`,
+`ml/src/`, `ml/requirements.txt` or the workflow file. It runs the tests, then
+`python -m ml.src.retrain`, and commits `ml/published/` as `github-actions[bot]`.
+
+- Only the workflow writes the published model, so researchers publishing at the same time never
+  conflict over it. Runs are serialized and each one checks out the newest `main`.
+- Training uses a fixed seed, so any update can be re-run from the data commit named in
+  `ml/published/README.md` (results may differ slightly across operating systems).
+- With too few participants the run records why it did not train and keeps any previous model.
+- Model files are scikit-learn pickles tied to the versions recorded in the training metadata. Load
+  them with the same `ml/requirements.txt` environment the workflow uses.
 
 ## Adding a 1D CNN later
 
