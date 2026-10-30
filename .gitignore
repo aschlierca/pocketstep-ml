@@ -1,16 +1,16 @@
 # Private planning documents
 doc/spec/PRD.md
 
-# Participant data and recordings: never commit
-ml/data/raw/*
-!ml/data/raw/.gitkeep
+# Session data in ml/data/raw/ is published (see README "Privacy and research ethics").
+# Exported ZIPs and videos are never committed.
 ml/data/processed/*
 !ml/data/processed/.gitkeep
 *.zip
 *.mov
 *.mp4
 
-# Generated pipeline artifacts
+# Local pipeline outputs. The published model and reports live in ml/published/ and are
+# committed by the retrain workflow.
 ml/models/*
 !ml/models/.gitkeep
 ml/reports/*
@@ -23,7 +23,8 @@ __pycache__/
 .pytest_cache/
 *.egg-info/
 
-# Xcode
+# Xcode (per-researcher signing settings are written by ios/setup_signing.sh)
+ios/Config/Signing.xcconfig
 ios/**/xcuserdata/
 ios/**/*.xcuserstate
 ios/build/
