@@ -1,0 +1,6 @@
+// Build settings for the PocketStep app target.
+// Per-researcher signing lives in Signing.xcconfig, which ios/setup_signing.sh writes and Git
+// ignores, so nobody has to change the shared Xcode project to install the app.
+PRODUCT_BUNDLE_IDENTIFIER = org.pocketstep.PocketStep$(POCKETSTEP_BUNDLE_SUFFIX)
+CODE_SIGN_STYLE = Automatic
+#include? "Signing.xcconfig"

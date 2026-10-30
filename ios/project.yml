@@ -20,6 +20,9 @@ targets:
       - path: PocketStep/Models
       - path: PocketStep/Services
       - path: PocketStep/Views
+    configFiles:
+      Debug: Config/PocketStep.xcconfig
+      Release: Config/PocketStep.xcconfig
     info:
       path: PocketStep/App/Info.plist
       properties:
@@ -34,9 +37,7 @@ targets:
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.pocketstep.PocketStep
         TARGETED_DEVICE_FAMILY: "1"
-        CODE_SIGN_STYLE: Automatic
   PocketStepTests:
     type: bundle.unit-test
     platform: iOS
@@ -44,9 +45,11 @@ targets:
       - path: PocketStep/Tests
     dependencies:
       - target: PocketStep
+    configFiles:
+      Debug: Config/PocketStepTests.xcconfig
+      Release: Config/PocketStepTests.xcconfig
     settings:
       base:
-        PRODUCT_BUNDLE_IDENTIFIER: org.pocketstep.PocketStepTests
         GENERATE_INFOPLIST_FILE: YES
 schemes:
   PocketStep:

@@ -1,0 +1,4 @@
+// Build settings for the unit-test target (see PocketStep.xcconfig).
+PRODUCT_BUNDLE_IDENTIFIER = org.pocketstep.PocketStepTests$(POCKETSTEP_BUNDLE_SUFFIX)
+CODE_SIGN_STYLE = Automatic
+#include? "Signing.xcconfig"
