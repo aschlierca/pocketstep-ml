@@ -25,11 +25,11 @@ jobs:
   retrain:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: main
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -49,7 +49,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add ml/published
-          if git diff --cached --quiet; then
+          # Ignore the timestamp line so a run that changes nothing else does not commit.
+          if git diff --cached --quiet -I '^- Updated: '; then
             echo "No changes to publish."
             exit 0
           fi
