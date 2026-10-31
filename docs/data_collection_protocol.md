@@ -63,6 +63,10 @@ and start a new session, or keep going and later mark the affected steps **inval
 
 - Several sessions per participant, covering **both pocket sides**, and ideally all three walking
   conditions.
+- Different kinds of walkers: light and heavy footfalls, short and tall people, loose and tight
+  trousers. The project's main goal is a step-detection threshold that adapts to each person
+  ([project goal](project_goal.md)), and that can only be learned from variety between people.
+- Label every footfall, including soft ones, so step detection can be scored fairly.
 - As many different participants as possible. Training splits by participant, so at least
   3 participants are needed to train at all; 10 or more give a much more trustworthy estimate.
 - Alternate the starting foot between sessions.

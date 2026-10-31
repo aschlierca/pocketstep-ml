@@ -1,7 +1,31 @@
 # PocketStep ML
 
-A research prototype for testing whether an iPhone's accelerometer, carried in one trouser pocket,
-can tell **left-foot steps from right-foot steps** while a person walks in place.
+A research prototype for **calibrating step detection to each person** who walks in place with
+an iPhone in their pocket, so that an iOS Unity app counts steps reliably for light and heavy
+walkers alike. It also studies whether the same accelerometer data can tell **left-foot steps from
+right-foot steps**.
+
+## Why this project exists
+
+An iOS Unity app detects walking-in-place steps from the accelerometer by comparing the signal
+with a threshold. One fixed threshold does not suit everyone: a light, soft walker may never cross
+it (missed steps), while a heavy or bouncy walker crosses it more than once per step (extra steps).
+The right threshold depends on the person, their pocket and phone, and how they walk.
+
+The aim of the ML work is to choose that threshold automatically:
+
+1. The user walks in place for a known number of steps (a short calibration walk).
+2. A model trained on recordings of many different people walking in place estimates the
+   threshold that detects that user's steps best.
+3. The app uses that threshold from then on, instead of one value tuned for an "average" walker.
+
+This repository provides what that requires: an app that records accelerometer data during a walk
+with a target number of steps, labeled footfall times that serve as ground truth for which steps
+should be detected, a shared dataset of different people, and a pipeline that evaluates step
+detection against those labels. **The threshold-calibration model itself is not built yet.** See
+[docs/project_goal.md](docs/project_goal.md) for the plan and what is already in place.
+
+## Components
 
 It has two independent parts that communicate only through exported CSV files:
 
@@ -59,6 +83,7 @@ It replaces the labels and keeps the recording.
 
 ## Contents
 
+- [Why this project exists](#why-this-project-exists)
 - [Researcher quick start](#researcher-quick-start)
 - [Architecture](#architecture)
 - [Prerequisites](#prerequisites)
@@ -71,6 +96,7 @@ It replaces the labels and keeps the recording.
 - [Privacy and research ethics](#privacy-and-research-ethics)
 
 Detailed documents:
+[project goal](docs/project_goal.md) ·
 [data format](docs/data_format.md) ·
 [collection and labeling protocol](docs/data_collection_protocol.md) ·
 [ML pipeline design](docs/ml_pipeline.md)
