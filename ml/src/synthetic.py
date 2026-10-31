@@ -3,7 +3,8 @@
 The signals are a simple physical caricature of walking in place with a phone in a trouser pocket:
 an impact pulse at each footfall, lateral sway toward the stance foot, and a thigh lift (which
 rotates the phone relative to gravity) before steps of the pocket-side leg. Per-session phone
-orientation is randomised.
+orientation is randomised. Optionally, a bounce halfway between footfalls (knee lift of a heavy,
+bouncy walker) adds peaks that a low step-detection threshold counts as extra steps.
 
 Synthetic data is NOT a participant recording and must never be used to claim real-world
 performance. Every generated session has "synthetic": true in its metadata, participant IDs start
@@ -11,6 +12,7 @@ with "SYN-", and the training/evaluation reports flag it.
 
 Usage:
     python -m ml.src.synthetic --output-dir ml/data/synthetic --participants 4 --sessions-per-participant 2
+    python -m ml.src.synthetic --output-dir /tmp/varied --varied-walkers --steps 50
 """
 
 from __future__ import annotations
@@ -51,6 +53,8 @@ def simulate_session(rng: np.random.Generator, *, participant_id: str, session_i
     impact = traits.get("impact_g", rng.uniform(0.5, 0.9))
     sway = traits.get("sway_g", rng.uniform(0.06, 0.12))
     lift = np.radians(traits.get("thigh_lift_deg", rng.uniform(15, 30)))
+    # No random draw when absent, so sessions generated without this trait are unchanged.
+    midstep = traits.get("midstep_g", 0.0)
 
     cadence = CADENCE_HZ[walking_condition] * rng.uniform(0.92, 1.08)
     intervals = (1 / cadence) * (1 + 0.05 * rng.standard_normal(n_steps - 1))
@@ -74,6 +78,9 @@ def simulate_session(rng: np.random.Generator, *, participant_id: str, session_i
         body[:, 1] += (0.15 if ipsilateral else 0.05) * amp * _gauss(t, s - 0.05, 0.03)
         if ipsilateral:
             pitch += lift * rng.uniform(0.8, 1.2) * _gauss(t, s - 0.2, 0.1)
+    if midstep > 0:
+        for mid in (step_times[:-1] + step_times[1:]) / 2:
+            body[:, 0] += midstep * rng.uniform(0.8, 1.2) * _gauss(t, mid, 0.05)
 
     # Phone frame: top of the phone pointing down the thigh, screen facing the leg (mirrored per side),
     # plus a random per-session tilt so axes never line up exactly with the body.
@@ -153,7 +160,10 @@ def write_session(directory: Path, sensor: pd.DataFrame, labels: pd.DataFrame, m
 
 
 def generate_dataset(output_dir: str | Path, participants: int = 4, sessions_per_participant: int = 2,
-                     steps: int = 40, seed: int = 7, fs: float = 100.0) -> list[Path]:
+                     steps: int = 40, seed: int = 7, fs: float = 100.0,
+                     varied_walkers: bool = False) -> list[Path]:
+    """varied_walkers: draw participants from light (soft footfalls) to heavy (hard footfalls plus a
+    bounce between steps), so the best step-detection threshold differs between people."""
     rng = np.random.default_rng(seed)
     output_dir = Path(output_dir)
     conditions = list(CADENCE_HZ)
@@ -162,6 +172,9 @@ def generate_dataset(output_dir: str | Path, participants: int = 4, sessions_per
         participant_id = f"SYN-P{p:02d}"
         traits = {"impact_g": rng.uniform(0.5, 0.9), "sway_g": rng.uniform(0.06, 0.12),
                   "thigh_lift_deg": rng.uniform(15, 30)}
+        if varied_walkers:
+            traits["impact_g"] = rng.uniform(0.25, 1.4)
+            traits["midstep_g"] = traits["impact_g"] * rng.uniform(0.3, 0.6)
         for s in range(1, sessions_per_participant + 1):
             session_id = f"{participant_id}-S{s}"
             sensor, labels, metadata = simulate_session(
@@ -188,8 +201,11 @@ def main(argv: Optional[list[str]] = None) -> int:
     parser.add_argument("--sessions-per-participant", type=int, default=2)
     parser.add_argument("--steps", type=int, default=40)
     parser.add_argument("--seed", type=int, default=7)
+    parser.add_argument("--varied-walkers", action="store_true",
+                        help="Light to heavy walkers, so the best step-detection threshold differs per person")
     args = parser.parse_args(argv)
-    paths = generate_dataset(args.output_dir, args.participants, args.sessions_per_participant, args.steps, args.seed)
+    paths = generate_dataset(args.output_dir, args.participants, args.sessions_per_participant, args.steps, args.seed,
+                             varied_walkers=args.varied_walkers)
     print(f"Wrote {len(paths)} synthetic session(s) to {args.output_dir}. They are not real recordings.")
     return 0
 
