@@ -1,4 +1,4 @@
-"""Retrain the published model from every session in ml/data/raw.
+"""Retrain the published models from every session in ml/data/raw.
 
 The GitHub Actions workflow runs this after new data is pushed and commits the results, so
 researchers never retrain by hand. It can also be run locally:
@@ -6,12 +6,14 @@ researchers never retrain by hand. It can also be run locally:
     python -m ml.src.retrain
 
 Writes to ml/published/:
-    pocketstep.joblib                  the model (only when training succeeded)
+    threshold_model.json               per-user step threshold for the Unity app (see ml/src/threshold.py)
+    reports/threshold_metrics.json, threshold_cv_results.csv, threshold_sessions.csv
+    pocketstep.joblib                  left/right classifier
     reports/metrics.json, confusion_matrix.png, test_predictions.csv
-    README.md                          human-readable status: data, split, held-out metrics, limitations
+    README.md                          human-readable status: data, evaluation, limitations
 
-When there is not enough data for a valid grouped split yet, README.md explains why, any previous
-model is left untouched, and the command still exits 0 so the workflow stays green.
+Each model is trained only when there is enough data for it. Otherwise README.md explains why, any
+previous version is left untouched, and the command still exits 0 so the workflow stays green.
 """
 
 from __future__ import annotations
@@ -27,11 +29,13 @@ from .config import PipelineConfig
 from .evaluate import evaluate
 from .features import build_feature_table, exclusion_summary
 from .preprocessing import find_session_dirs, load_sessions
+from .threshold import format_summary, train_threshold_model
 from .train import TrainingDataError, train
 
 DEFAULT_DATA_DIR = Path("ml/data/raw")
 DEFAULT_OUTPUT_DIR = Path("ml/published")
 MODEL_FILE = "pocketstep.joblib"
+THRESHOLD_MODEL_FILE = "threshold_model.json"
 
 
 def dataset_summary(data_dir: Path, config: PipelineConfig) -> tuple[list[str], dict]:
@@ -79,9 +83,38 @@ def metrics_lines(report: dict) -> list[str]:
     return lines
 
 
+def threshold_lines(report: dict, path: Path) -> list[str]:
+    data = report["dataset"]
+    lines = [
+        f"Model: `{path.as_posix()}` (copy into the Unity project; see `unity/README.md`). "
+        f"The app uses **`{report['recommended_method']}`**, the best of fixed / count_match / model below.",
+        "",
+        f"Leave-one-participant-out over {data['participants']} participant(s), {data['sessions']} session(s): "
+        "each session's first steps are the calibration walk and the steps after it are scored.",
+        "",
+        format_summary(report),
+        "",
+    ]
+    if data["skipped_sessions"]:
+        lines += ["Sessions not used:", *[f"- `{k}`: {v}" for k, v in data["skipped_sessions"].items()], ""]
+    lines += ["Limitations:", *[f"- {note}" for note in report["limitations"]]]
+    return lines
+
+
+def retrain_threshold(data_dir: Path, output_dir: Path, config: PipelineConfig, log=print) -> tuple[bool, list[str]]:
+    path = output_dir / THRESHOLD_MODEL_FILE
+    try:
+        report = train_threshold_model(data_dir, config, path, output_dir / "reports", log=log)
+    except TrainingDataError as exc:
+        kept = path.exists()
+        return False, [f"Not trained: {exc}", "",
+                       "The previous threshold model was kept." if kept else "No threshold model has been published yet."]
+    return True, threshold_lines(report, path)
+
+
 def retrain(data_dir: Path = DEFAULT_DATA_DIR, output_dir: Path = DEFAULT_OUTPUT_DIR,
             config: Optional[PipelineConfig] = None, log=print) -> bool:
-    """Returns True when a new model was trained and evaluated."""
+    """Returns True when at least one model was trained and evaluated."""
     config = config or PipelineConfig()
     output_dir.mkdir(parents=True, exist_ok=True)
     data_lines, counts = dataset_summary(data_dir, config)
@@ -99,13 +132,15 @@ def retrain(data_dir: Path = DEFAULT_DATA_DIR, output_dir: Path = DEFAULT_OUTPUT
         "",
         *data_lines,
         "",
-        "## Model",
-        "",
     ]
+
+    no_data = ["Not trained: no valid sessions yet. Collect data and publish it with `python -m ml.src.ingest`."]
+    threshold_trained, threshold_body = (False, no_data) if counts["accepted"] == 0 else \
+        retrain_threshold(data_dir, output_dir, config, log)
 
     trained = False
     if counts["accepted"] == 0:
-        body = ["Not trained: no valid sessions yet. Collect data and publish it with `python -m ml.src.ingest`."]
+        body = no_data
     else:
         try:
             model_path = output_dir / MODEL_FILE
@@ -118,13 +153,14 @@ def retrain(data_dir: Path = DEFAULT_DATA_DIR, output_dir: Path = DEFAULT_OUTPUT
             kept = (output_dir / MODEL_FILE).exists()
             body = [f"Not trained: {exc}", "",
                     "The previous model was kept." if kept else "No model has been published yet."]
-    (output_dir / "README.md").write_text("\n".join(header + body) + "\n")
-    log("\n".join(body))
-    return trained
+    sections = ["## Step threshold model (Unity)", "", *threshold_body, "", "## Left/right model", "", *body]
+    (output_dir / "README.md").write_text("\n".join(header + sections) + "\n")
+    log("\n".join(sections))
+    return trained or threshold_trained
 
 
 def main(argv: Optional[list[str]] = None) -> int:
-    parser = argparse.ArgumentParser(description="Retrain and evaluate the published model from ml/data/raw.")
+    parser = argparse.ArgumentParser(description="Retrain and evaluate the published models from ml/data/raw.")
     parser.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     parser.add_argument("--config", help="Optional pipeline config JSON")

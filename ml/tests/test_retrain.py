@@ -3,6 +3,7 @@ import shutil
 
 from ml.src import schema
 from ml.src.retrain import retrain
+from ml.src.synthetic import generate_dataset
 
 
 def _real_dataset(source, target):
@@ -42,3 +43,24 @@ def test_retrain_publishes_model_and_reports(synthetic_dataset, tmp_path):
     status = (out / "README.md").read_text()
     assert "| Macro F1 |" in status
     assert "Development target" in status
+
+
+def test_retrain_publishes_threshold_model_for_unity(tmp_path):
+    source = tmp_path / "varied"
+    generate_dataset(source, participants=4, sessions_per_participant=2, steps=45, seed=8, varied_walkers=True)
+    out = tmp_path / "published"
+    assert retrain(_real_dataset(source, tmp_path / "raw"), out, log=lambda *_: None) is True
+    model = json.loads((out / "threshold_model.json").read_text())
+    assert model["recommended_method"] in ("fixed", "count_match", "model")
+    for name in ("threshold_metrics.json", "threshold_cv_results.csv", "threshold_sessions.csv"):
+        assert (out / "reports" / name).exists()
+    status = (out / "README.md").read_text()
+    assert status.index("## Step threshold model (Unity)") < status.index("## Left/right model")
+    assert "| `oracle` |" in status
+
+
+def test_short_sessions_explain_why_no_threshold_model(synthetic_dataset, tmp_path):
+    out = tmp_path / "published"
+    retrain(_real_dataset(synthetic_dataset, tmp_path / "raw"), out, log=lambda *_: None)
+    assert not (out / "threshold_model.json").exists()
+    assert "usable annotated steps; needs 30" in (out / "README.md").read_text()
