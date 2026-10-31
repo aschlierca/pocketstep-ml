@@ -1,5 +1,9 @@
 import json
 import math
+import shutil
+import subprocess
+import sys
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -127,3 +131,18 @@ def test_calibrate_recording_applies_recommended_method(varied_dataset, tmp_path
         assert set(features) == set(th.FEATURES)
     fixed, _ = th.calibrate_recording({**model, "recommended_method": "fixed"}, session_dir, 45)
     assert fixed == model["fixed_threshold_g"]
+
+
+UNITY = Path(__file__).resolve().parents[2] / "unity"
+
+
+def test_plugin_fixture_is_up_to_date():
+    committed = json.loads((UNITY / "Tests" / "golden.json").read_text())
+    assert committed == json.loads(json.dumps(th.golden_fixture())), \
+        "Regenerate with: python -m ml.src.threshold golden"
+
+
+@pytest.mark.skipif(sys.platform != "darwin" or shutil.which("xcrun") is None, reason="needs macOS with Xcode")
+def test_unity_plugin_matches_python():
+    result = subprocess.run([str(UNITY / "Tests" / "run_plugin_tests.sh")], capture_output=True, text=True)
+    assert result.returncode == 0, result.stdout + result.stderr
