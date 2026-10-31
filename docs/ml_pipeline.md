@@ -1,7 +1,8 @@
 # ML pipeline design
 
 This document explains how the Python pipeline turns exported sessions into a left/right step
-classifier, and why it is built this way. Commands are in the [README](../README.md#python-pipeline).
+classifier, and why it is built this way. The step-threshold model for the Unity app is described in
+[Step threshold calibration](#step-threshold-calibration). Commands are in the [README](../README.md#python-pipeline).
 
 ```
 ml/data/raw/<session>/                 validate        preprocess          segment            features
@@ -27,9 +28,10 @@ ml/data/raw/<session>/                 validate        preprocess          segme
 | `train.py` | Grouped split, fitting, out-of-fold validation, bundle metadata. |
 | `evaluate.py` | Held-out metrics, plots, limitations. |
 | `predict.py` | Detection + classification of a new recording; optional separate scoring. |
+| `threshold.py` | Unity detector copy, calibration features, per-user threshold model, export. |
 | `synthetic.py` | Synthetic sessions for tests and demos only. |
 | `ingest.py` | Validates exported sessions and publishes them to `ml/data/raw/` with git. |
-| `retrain.py` | Trains and evaluates on `ml/data/raw/` and writes `ml/published/`; run by CI. |
+| `retrain.py` | Trains and evaluates both models on `ml/data/raw/` and writes `ml/published/`; run by CI. |
 
 ## Validation
 
@@ -173,6 +175,34 @@ Detection errors and left/right errors are different failures, so they are measu
 
 Context features at inference use previously **detected** steps, while training uses annotated
 ones. Missed or extra detections therefore also affect `time_since_previous_step`.
+
+## Step threshold calibration
+
+`threshold.py` tunes the Unity app's own step detector. It does not use the peak detector above,
+because a threshold only transfers to the phone if it is tuned on the detector the phone runs.
+
+- **Mirror, not approximation.** Recordings are linearly interpolated to 60 Hz inside each gap-free
+  segment; samples are never invented across a gap. The plugin's filter and its
+  `filtered > threshold && dt > cooldown` rule are then evaluated in the same order as the
+  Objective-C++ code. A test compares the result with a sample-by-sample transcription, and
+  `unity/Tests` compares it with the compiled plugin on a fixture written by
+  `python -m ml.src.threshold golden`. `pytest` fails if that fixture is stale.
+- **Calibration and scoring split in time.** The first `calibration_steps` (20) usable labels end
+  the calibration walk (plus 0.5 s). Features come only from samples up to that point. The
+  detector runs over the whole session, as it would live, but only detections after the walk are
+  scored. Detections next to invalid or unreviewed labels are ignored rather than counted wrong.
+- **Best threshold.** Every grid value from 1.02 to 2.5 g in steps of 0.01 is scored by F1 within
+  0.15 s. The median of all values within 0.01 F1 of the best is the session's target, which
+  avoids an arbitrary edge of a flat optimum.
+- **Grouped evaluation.** Leave-one-participant-out: the fixed threshold and the ridge model for a
+  participant are fitted only on the other participants. Count match and the model see only that
+  participant's calibration walk. A test checks that changing a held-out participant's evaluation
+  labels does not change any threshold chosen for them.
+- **Simplest method that works.** The exported file recommends `fixed`, `count_match` or `model`,
+  whichever has the highest mean F1. Ties go to the simpler method. If the regression does not
+  beat counting the calibration walk, the app counts the walk.
+- **Units.** Thresholds are in g of filtered magnitude with gravity included, so 1 g is standing
+  still. This matches the plugin, not the gravity-removed signals used elsewhere in this pipeline.
 
 ## Continuous retraining
 

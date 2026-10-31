@@ -19,30 +19,44 @@ The aim of the ML work is to choose that threshold automatically:
    threshold that detects that user's steps best.
 3. The app uses that threshold from then on, instead of one value tuned for an "average" walker.
 
-This repository provides what that requires: an app that records accelerometer data during a walk
-with a target number of steps, labeled footfall times that serve as ground truth for which steps
-should be detected, a shared dataset of different people, and a pipeline that evaluates step
-detection against those labels. **The threshold-calibration model itself is not built yet.** See
-[docs/project_goal.md](docs/project_goal.md) for the plan and what is already in place.
+This repository provides all of it:
+
+- an app that records accelerometer data during a walk with a target number of steps;
+- labeled footfall times, the ground truth for which steps should be detected;
+- a shared dataset of different people;
+- a threshold model, trained on that dataset, that is retrained automatically as data arrives;
+- a Unity plugin that runs the app's existing step detector with the calibrated threshold.
+
+The model is built on an exact copy of the Unity app's detector, so a threshold chosen in Python
+counts the same steps on the phone. See [docs/project_goal.md](docs/project_goal.md) and
+[unity/README.md](unity/README.md).
 
 ## Components
 
-It has two independent parts that communicate only through exported CSV files:
+1. **PocketStep**, an iOS app (Swift/SwiftUI) for researchers. It records raw accelerometer
+   data, lets a researcher label each step, and exports a documented session dataset.
+2. **A Python pipeline** that validates the recordings and trains two models, each evaluated on
+   participants it never saw:
+   - the **step-threshold model** (`ml/src/threshold.py`): picks a user's threshold from a
+     calibration walk;
+   - a **left/right classifier**: a baseline Random Forest with a `left` / `right` / `unknown`
+     output.
+3. **A Unity plugin** (`unity/`) that replaces the game's step-counter plugin and applies the
+   threshold model on the phone.
 
-1. **PocketStep**, an iOS app (Swift/SwiftUI) that records raw accelerometer data, lets a
-   researcher label each step's foot, and exports a documented session dataset.
-2. **A Python pipeline** that validates and preprocesses the recordings, trains a baseline Random
-   Forest without session or participant leakage, evaluates it on held-out recordings, and runs
-   inference on new recordings with a `left` / `right` / `unknown` output.
+The app and the pipeline communicate only through exported CSV files. The pipeline hands the
+Unity plugin a single JSON file, `ml/published/threshold_model.json`.
 
 This is not a fitness app. The priorities are data quality, trustworthy labels, reproducibility
 and honest evaluation.
 
-> **Status.** The Python pipeline is tested end to end on synthetic data, and newly published
-> sessions retrain the model automatically through GitHub Actions. The iOS app builds and
-> its logic tests pass in the iOS Simulator, but recording has not yet been verified on a
-> physical iPhone (the Simulator has no motion sensors). **No real-world accuracy has been
-> measured.** The macro-F1 ≥ 0.85 figure below is a development target, not a result.
+> **Status.** The Python pipeline is tested end to end on synthetic data. Newly published sessions
+> retrain both models automatically through GitHub Actions. The iOS app builds, and its logic tests
+> pass in the iOS Simulator. Recording has not yet been verified on a physical iPhone (the Simulator
+> has no motion sensors). The Unity plugin matches the Python detector exactly in a macOS test
+> harness, but it has not been built into the Unity project or run on a phone. **No real-world
+> accuracy has been measured** for either model. The macro-F1 ≥ 0.85 figure below is a development
+> target, not a result.
 
 ## Researcher quick start
 
@@ -75,8 +89,9 @@ Open `ios/PocketStep.xcodeproj`, select your iPhone and press **Run** (see
 
    This validates every new `S-*.zip` in `~/Downloads`, shows what will be published, asks you
    to confirm consent for public release, and then commits and pushes the session.
-4. GitHub Actions retrains the model on all published sessions and commits the result to
+4. GitHub Actions retrains both models on all published sessions and commits the results to
    [`ml/published/`](ml/published/README.md) within a few minutes. There is nothing else to run.
+   Copy the new `ml/published/threshold_model.json` into the Unity project to use it.
 
 To fix labels later, correct them in the app, export again and re-run `python -m ml.src.ingest`.
 It replaces the labels and keeps the recording.
@@ -99,7 +114,8 @@ Detailed documents:
 [project goal](docs/project_goal.md) ·
 [data format](docs/data_format.md) ·
 [collection and labeling protocol](docs/data_collection_protocol.md) ·
-[ML pipeline design](docs/ml_pipeline.md)
+[ML pipeline design](docs/ml_pipeline.md) ·
+[Unity plugin](unity/README.md)
 
 ## Architecture
 
@@ -265,7 +281,10 @@ enlarge the sample set with `python -m ml.src.synthetic --output-dir ml/data/syn
 | Step | Command |
 |---|---|
 | Publish exported sessions (validate, commit, push) | `python -m ml.src.ingest [ZIPs or folders]` |
-| Retrain the published model locally (normally done by GitHub Actions) | `python -m ml.src.retrain` |
+| Retrain the published models locally (normally done by GitHub Actions) | `python -m ml.src.retrain` |
+| Train and evaluate only the step-threshold model | `python -m ml.src.threshold train --data-dir ml/data/raw` |
+| Threshold for one recorded calibration walk | `python -m ml.src.threshold calibrate --input path/to/session --steps 20` |
+| Check the Unity plugin against Python (macOS) | `unity/Tests/run_plugin_tests.sh` |
 | Validate recordings | `python -m ml.src.preprocessing --data-dir ml/data/raw` |
 | Export the per-step feature table (optional) | `python -m ml.src.features --data-dir ml/data/raw --output ml/data/processed/step_features.csv` |
 | Train | `python -m ml.src.train --data-dir ml/data/raw` |
@@ -297,10 +316,19 @@ sensor file, or takes `--pocket-side left|right`.
 - **Ingest**: one line per session (`NEW`, `UPDATED LABELS`, `skipped` or `REJECTED` with the
   reason), label counts, warnings and the notes that will become public; then a consent prompt,
   a commit and a push. A different recording that reuses an existing session ID is refused.
-- **Published model** (`ml/published/`, written by GitHub Actions): `pocketstep.joblib`,
-  `reports/metrics.json`, `reports/confusion_matrix.png`, `reports/test_predictions.csv` and
-  `README.md` with the dataset summary, split, held-out metrics and limitations. Until at least
-  3 participants have usable data, the README explains why no model was trained.
+- **Published models** (`ml/published/`, written by GitHub Actions):
+  - `threshold_model.json` for the Unity plugin, plus `reports/threshold_metrics.json`,
+    `threshold_cv_results.csv` and `threshold_sessions.csv`;
+  - `pocketstep.joblib`, with `reports/metrics.json`, `reports/confusion_matrix.png` and
+    `reports/test_predictions.csv`;
+  - `README.md` with the dataset summary, the threshold method comparison (built-in 1.45 g, best
+    fixed value, count match, model, per-session best), the left/right held-out metrics, and
+    limitations.
+
+  Until at least 3 participants have usable data, the README explains why no model was trained.
+  For the threshold model, a session is usable when it has 30 or more reviewed, valid labels.
+- **Threshold train**: the method comparison table. Writes the model JSON (default
+  `ml/models/threshold_model.json`) and reports (default `ml/reports/threshold/`).
 - **Validate**: one block per session, `OK` or `REJECTED`, with errors and warnings (gaps, duplicate
   or out-of-order timestamps, units, sampling rate, label problems) and basic stats. Exit code 1
   if any session is rejected.
@@ -343,14 +371,22 @@ See [docs/ml_pipeline.md](docs/ml_pipeline.md) for the reasoning, including why 
   Other pockets, loose clothing, walking forward or turning are not covered.
 - **Labels depend on the annotator.** Footfall times come from the chart (peaks) or from video
   synced by hand. Assisted labels assume alternation and must be reviewed.
-- **Step detection is a simple peak detector** with fixed thresholds. It has not been tuned on
-  real data.
+- **The threshold model is only as good as the Unity detector it tunes.** The detector has
+  a 0.45 s cooldown, which caps counting at 2.2 steps/s. Brisk walkers are undercounted at any
+  threshold, and the threshold report counts how many step gaps this hides.
+- **Threshold calibration assumes a clean walk.** The plugin counts movement during calibration
+  (picking up the phone, sitting down) as steps.
+- **60 Hz resampling.** The app records at 100 Hz, and the threshold pipeline interpolates to the
+  Unity plugin's 60 Hz. Core Motion's own 60 Hz output may differ slightly.
+- **The left/right pipeline's step detection is a simple peak detector** with fixed thresholds.
+  It has not been tuned on real data.
 - **Offline signal processing.** Gravity separation uses zero-phase filtering, and live
   predictions need about 0.4 s after the footfall. An on-device real-time version would need
   causal filters and a model running on the phone (for example through Core ML). This prototype
   keeps inference in Python.
 - **Sampling.** iPhones may deliver fewer samples than requested and with jitter. The measured
-  rate is recorded and gaps are flagged, but the pipeline does not resample.
+  rate is recorded and gaps are flagged. The left/right pipeline does not resample; the threshold
+  pipeline resamples to 60 Hz within gap-free stretches only.
 - **Probabilities.** Random Forest probabilities are uncalibrated unless `--calibration` is used.
   The confidence threshold is a tuning knob, not a guarantee.
 - **The synthetic data is a caricature** designed to exercise the code; it has an easy,

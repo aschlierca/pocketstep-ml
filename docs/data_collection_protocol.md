@@ -32,7 +32,8 @@ fairly if every session follows the same procedure.
 2. Enter or generate the participant ID. Check the phone model and choose:
    - **Pocket side**: the pocket the phone will go in.
    - **Starting foot**: the foot the participant will step with first.
-   - **Target steps**: for example 40.
+   - **Target steps**: at least 40. The threshold model uses the first 20 as a calibration walk
+     and scores the rest.
    - **Walking condition**: slow, comfortable or brisk.
    - **Sampling rate**: keep 100 Hz unless you have a reason to change it.
    - **Countdown**: 5 s gives time to pocket the phone.
