@@ -87,12 +87,44 @@ class TrainingConfig:
 
 
 @dataclass
+class ThresholdConfig:
+    # The Unity app's step detector (unity/Plugins/iOS/PocketStepCounter.mm). These values must
+    # match the plugin, or the calibrated threshold will not transfer.
+    sample_rate_hz: float = 60.0
+    # filtered = w * filtered + (1 - w) * |a|, once per sample, starting from filter_initial_g.
+    filter_previous_weight: float = 0.6
+    filter_initial_g: float = 1.0
+    # A step is counted when filtered > threshold and more than this has passed since the last step.
+    min_interval_seconds: float = 0.45
+    # The threshold the app used before calibration; reported as a baseline.
+    current_threshold_g: float = 1.45
+    # Calibration walk: the first calibration_steps annotated steps of each session, plus a short tail.
+    calibration_steps: int = 20
+    calibration_tail_seconds: float = 0.5
+    # Sessions need at least this many annotated steps after the calibration walk to be scored.
+    min_evaluation_steps: int = 10
+    # Thresholds searched, in g of total acceleration magnitude (gravity included, as in the app).
+    grid_min_g: float = 1.02
+    grid_max_g: float = 2.5
+    grid_step_g: float = 0.01
+    # Detected and annotated steps within this tolerance are the same step. Wider than the left/right
+    # pipeline's because the app's filter delays detection by a frame or two.
+    match_tolerance_seconds: float = 0.15
+    # Every threshold within this F1 of the best counts as best; the median of them is used.
+    best_f1_tolerance: float = 0.01
+    ridge_alpha: float = 1.0
+    min_participants: int = 3
+    include_unreviewed: bool = False
+
+
+@dataclass
 class PipelineConfig:
     preprocessing: PreprocessingConfig = field(default_factory=PreprocessingConfig)
     segmentation: SegmentationConfig = field(default_factory=SegmentationConfig)
     features: FeatureConfig = field(default_factory=FeatureConfig)
     model: ModelConfig = field(default_factory=ModelConfig)
     training: TrainingConfig = field(default_factory=TrainingConfig)
+    threshold: ThresholdConfig = field(default_factory=ThresholdConfig)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
